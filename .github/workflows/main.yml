@@ -42,12 +42,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          ls
           # 設定
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # 現在のブランチを取得
-          CURRENT_BRANCH=$(git branch --show-current)
 
           # hogeブランチを作成し、生成されたファイルをコミット
           git checkout -b hoge
