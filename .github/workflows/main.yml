@@ -38,8 +38,21 @@ jobs:
         run: |
           doxygen ./Doxyfile
       # htmlフォルダをgh-pagesブランチにプッシュ
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./html
+      - name: Deploy to GitHub Pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # 設定
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 現在のブランチを取得
+          CURRENT_BRANCH=$(git branch --show-current)
+
+          # hogeブランチを作成し、生成されたファイルをコミット
+          git checkout -b hoge
+          git add generated_file.txt
+          git commit -m "Add generated file"
+
+          # hogeブランチにプッシュ
+          git push origin hoge
