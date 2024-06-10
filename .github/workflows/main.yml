@@ -1,0 +1,45 @@
+name: GenerateDocument
+
+# on　でタイミングを指定
+on:
+  # masterブランチにプッシュ、プルリクまたはgithub上でボタンを押したら実行される
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+  # ボタンが押されたら
+  workflow_dispatch:
+
+# jobsが実行内容
+jobs:
+  # GenerateDocumentという名前のjob
+  GenerateDocument:
+    # 環境
+    runs-on: ubuntu-latest
+
+    # ステップは、ジョブの一部として実行される一連のタスク
+    steps:
+      # リポジトリのコードを取得
+      - uses: actions/checkout@v3
+      - name: Install gcovr
+        run: |
+          sudo pip3 install gcovr
+      # graphviz and doxygenをインストール
+      - name: Install graphviz and doxygen
+        run: |
+          sudo apt update
+          wget https://www.doxygen.nl/files/doxygen-1.10.0.linux.bin.tar.gz
+          tar -xzf doxygen-1.10.0.linux.bin.tar.gz
+          sudo mv doxygen-1.10.0/bin/doxygen /usr/local/bin/doxygen
+          doxygen --version
+      # doxygenでhtmlを生成
+      - name: Build
+        run: |
+          doxygen ./Doxyfile
+      # htmlフォルダをgh-pagesブランチにプッシュ
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./html
