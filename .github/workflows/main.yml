@@ -51,8 +51,8 @@ jobs:
 
           # hogeブランチを作成し、生成されたファイルをコミット
           git checkout -b hoge
-          git add generated_file.txt
+          git add ./html
           git commit -m "Add generated file"
 
           # hogeブランチにプッシュ
-          git push origin hoge
+          git push 
